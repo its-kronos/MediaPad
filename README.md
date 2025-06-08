@@ -1,5 +1,5 @@
 # MediaPad
-
+![image](https://github.com/user-attachments/assets/b44731e8-d304-489c-b45c-d39cc1c0c4b5)
 # Overview
 - The MediaPad is a macropad made for the Hackclub program Hackpad.
 - The macroboard features multiple buttons to control Youtube-based media, including functions such as going to the previous video, rewinding, pausing, skipping 5 seconds, and going to the next video.
