@@ -1,0 +1,5 @@
+﻿Designator,Footprint,Quantity,Value,LCSC Part #
+"BACK1, BACKTRACK1, FORWARD1, FORWARDTRACK1, ON/OFF1, PAUSE1",SW_Cherry_MX_1.00u_PCB,6,SW_Push,
+D1,LED_SK6812MINI_PLCC4_3.5x3.5mm_P1.75mm,1,SK6812MINI,
+SW1,RotaryEncoder_Alps_EC11E-Switch_Vertical_H20mm,1,RotaryEncoder_Switch_MP,
+U1,XIAO-RP2040-DIP,1,XIAO-RP2040-DIP,
