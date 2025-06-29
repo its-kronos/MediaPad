@@ -3,23 +3,17 @@ import board
 from kmk.kmk_keyboard import KMKKeyboard
 from kmk.keys import KC
 from kmk.modules.encoder import EncoderHandler
-from kmk.scanners.keyboard import KeysScanner
+from kmk.scanners.keypad import KeysScanner
 from kmk.modules.macros import Macros
 from kmk.modules.macros import Press, Release, Tap
 from kmk.extensions.media_keys import MediaKeys
+from kmk.keys import Key
 
-'''boardLockPin = 4
+'''
+soundControlPin = 0 (TO CHANGE)
 
-backTrackPin=27
-rewindPin=28
-pausePin=29
-fastForwardPin=6
-forwardTrackPin=7
-
-soundControlPin = 0
-
-rotaryA=2
-RotaryB=1'''
+rotaryA=2 (TO CHANGE)
+RotaryB=1 (TO CHANGE)'''
 
 board_lock = False
 volume_lock = False
@@ -30,13 +24,13 @@ macro = Macros()
 keyboard.modules = [encoder,macro,MediaKeys()]
 
 switchPins = [
-    board.GP4, #boardLock
-    board.GP27, #backtrack
-    board.GP28, #rewind
-    board.GP29,# pause
-    board.GP6,#fast forward
-    board.GP7,#skip track
-    board.GP0#sound control
+    board.D9, #boardLock
+    board.D1, #backtrack
+    board.D2, #rewind
+    board.D3,# pause
+    board.D4,#fast forward
+    board.D5,#skip track
+    board.D6#sound control
 ]
 
 keyboard.matrix = KeysScanner(
@@ -45,79 +39,68 @@ keyboard.matrix = KeysScanner(
 )
 
 
-def backTrackFunction():
-    if not board_lock:
-        Press(KC.LSHIFT)
-        Tap(KC.P)
-        Release(KC.LSHIFT)
 
-backTrackMacro = KC.MACRO(
-    on_press = backTrackFunction
-)
-
-
-def skipTrackFunction():
-    if not board_lock:
-        Press(KC.LSHIFT)
-        Tap(KC.N)
-        Release(KC.LSHIFT)
-
-skipTrackMacro = KC.MACRO(
-    on_press = skipTrackFunction
-)
+class TrackClass(Key):
+    def __init__(self,key):
+        self.key = key
+    def on_press(self,keyboard,key):
+        if not board_lock:
+            keyboard.tap_key(KC.LSHIFT(self.key))
+    def on_release(self, keyboard, key):
+        pass
+        
+backTrack = TrackClass(KC.P)
+skipTrack = TrackClass(KC.N)
 
 
-def boardLockFunction():
-    global board_lock
-    board_lock = not board_lock
+class boardLockClass(Key):
+    def on_press(self,keyboard,key):
+        global board_lock
+        board_lock = not board_lock
+        print(board_lock)
+    def on_release(self, keyboard, key):
+        pass
 
-boardLockMacro = KC.MACRO(
-    on_press = boardLockFunction
-)
+boardLock = boardLockClass()
 
 keyboard.keymap = [
-    [boardLockMacro,backTrackMacro,KC.LEFT,KC.SPACE,KC.RIGHT,skipTrackMacro,None]
+    [boardLock,backTrack,KC.LEFT,KC.SPACE,KC.RIGHT,skipTrack,None]
 ]
 
 
 
 encoder.pins = (
-    (board.GP2,board.GP1,board.GP0)
-)
-
-def volumeLockFunction():
-    global volume_lock
-    volume_lock = not volume_lock
-
-volumeLockMacro = KC.MACRO(
-    on_press = volumeLockFunction
+    (board.D7,board.D8,board.D9)
 )
 
 
-def volumeDownFunction():
-    if not volume_lock:
-        Tap(KC.VOLD)
+class volumeLockClass(Key):
+    def on_press(self, keyboard, key):
+        global volume_lock
+        volume_lock = not volume_lock
+    def on_release(self, keyboard, key):
+        pass
 
-volumeDownMacro = KC.MACRO(
-    on_press = volumeDownFunction
-)
+volumeLock = volumeLockClass()
 
 
-def volumeUpFunction():
-    if not volume_lock:
-        Tap(KC.VOLU)
+class volumeChange(Key):
+    def __init__(self,key):
+        self.key = key
+    def on_press(self, keyboard, key):
+        if not volume_lock:
+            keyboard.tap_key(self.key)
+    def on_release(self, keyboard, key):
+        pass
 
-volumeUpMacro = KC.MACRO(
-    on_press=volumeUpFunction
-)
+volumeDown = volumeChange(KC.VOLD)
+volumeUp = volumeChange(KC.VOLU)
+
 
 encoder.map = [(
-    (volumeDownMacro,volumeUpMacro,volumeLockMacro)
+    (volumeDown,volumeUp,volumeLock)
 )]
 
 
 if __name__ == "__main__":
     keyboard.go()
-
-
-
