@@ -7,6 +7,11 @@
 - Similarly, a board-lock button exists to lock the keys that move to a different video, allowing only the inputs related to volume or time changing within the current video
 - Features an LED that could be used for debugging or other purposes if neccessary \
 *Note that the Models folder is for models used in the KiCad PCB rendering
+
+# Demo
+
+https://vimeo.com/1098898996
+
 # Case
 - Includes a plate for switch stability, and everything is held together by M3 screws with threading in the plastic through the 3D-printed parts, but not the PCB
 - Plate is top-mounted
