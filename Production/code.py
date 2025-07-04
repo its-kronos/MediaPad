@@ -19,9 +19,18 @@ board_lock = False
 volume_lock = False
 
 keyboard = KMKKeyboard()
-encoder = EncoderHandler()
+keyboard.debug_enabled = True
+
+
 macro = Macros()
-keyboard.modules = [encoder,macro,MediaKeys()]
+keyboard.modules = [macro]
+keyboard.extensions = [MediaKeys()]
+
+
+
+
+
+
 
 switchPins = [
     board.D9, #boardLock
@@ -37,6 +46,9 @@ keyboard.matrix = KeysScanner(
     pins=switchPins,
     value_when_pressed =False
 )
+
+encoder_handler = EncoderHandler()
+keyboard.modules.append(encoder_handler)
 
 
 
@@ -63,15 +75,7 @@ class boardLockClass(Key):
 
 boardLock = boardLockClass()
 
-keyboard.keymap = [
-    [boardLock,backTrack,KC.LEFT,KC.SPACE,KC.RIGHT,skipTrack,None]
-]
 
-
-
-encoder.pins = (
-    (board.D7,board.D8,board.D9)
-)
 
 
 class volumeLockClass(Key):
@@ -93,13 +97,26 @@ class volumeChange(Key):
     def on_release(self, keyboard, key):
         pass
 
+keyboard.keymap = [
+    [boardLock,backTrack,KC.LEFT,KC.SPACE,KC.RIGHT,skipTrack,volumeLock]
+]
+
+
+
+
+
+encoder_handler.pins = [(
+    board.D7,board.D8,None
+)]
+
 volumeDown = volumeChange(KC.VOLD)
 volumeUp = volumeChange(KC.VOLU)
 
 
-encoder.map = [(
-    (volumeDown,volumeUp,volumeLock)
-)]
+encoder_handler.map = [(
+    (volumeDown,volumeUp,None),
+),]
+
 
 
 if __name__ == "__main__":
